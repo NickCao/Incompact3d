@@ -1568,8 +1568,9 @@ contains
     implicit none
 
     integer :: handle, ierror
+    logical :: ready
 
-    call NBC_TEST(handle,ierror)
+    call MPI_TEST(handle, ready, MPI_STATUS_IGNORE, ierror)
 
     return
   end subroutine transpose_test

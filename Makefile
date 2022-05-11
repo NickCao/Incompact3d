@@ -8,7 +8,7 @@
 # generate a Git version string
 GIT_VERSION := $(shell git describe --tag --long --always)
 
-DEFS = -DDOUBLE_PREC -DVERSION=\"$(GIT_VERSION)\"
+DEFS = -DDOUBLE_PREC -DVERSION=\"$(GIT_VERSION)\" -DOCC -DEVEN
 
 LCL = local# local,lad,sdu,archer
 IVER = 17# 15,16,17,18
