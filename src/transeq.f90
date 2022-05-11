@@ -119,11 +119,19 @@ contains
     !! OUTPUTS
     real(mytype),dimension(xsize(1),xsize(2),xsize(3),ntime) :: dux1,duy1,duz1
 
+    integer :: handle1, handle2, handle3
+    real(mytype),dimension(xsize(1)+100,xsize(2),xsize(3)) :: ux1buf, uy1buf, uz1buf
+    real(mytype),dimension(ysize(1)+100,ysize(2),ysize(3)) :: ux2buf, uy2buf, uz2buf
+
 #ifdef DEBG 
     real(mytype) avg_param
 #endif
     
     integer :: i,j,k,is
+
+    call transpose_x_to_y_start(handle1,ux1,ux2,ux1buf,ux2buf)
+    call transpose_x_to_y_start(handle2,uy1,uy2,uy1buf,uy2buf)
+    call transpose_x_to_y_start(handle3,uz1,uz2,uz1buf,uz2buf)
 
     !SKEW SYMMETRIC FORM
     !WORK X-PENCILS
@@ -181,9 +189,6 @@ contains
        ti1(:,:,:) = ti1(:,:,:) + uz1(:,:,:) * ux1(:,:,:) * td1(:,:,:)
     endif
 
-    call transpose_x_to_y(ux1,ux2)
-    call transpose_x_to_y(uy1,uy2)
-    call transpose_x_to_y(uz1,uz2)
 #ifdef DEBG 
     avg_param = zero
     call avg3d (ux2, avg_param)
@@ -199,6 +204,10 @@ contains
     else
        rho2(:,:,:) = one
     endif
+
+    call transpose_x_to_y_wait(handle1,ux1,ux2,ux1buf,ux2buf)
+    call transpose_x_to_y_wait(handle2,uy1,uy2,uy1buf,uy2buf)
+    call transpose_x_to_y_wait(handle3,uz1,uz2,uz1buf,uz2buf)
 
     !WORK Y-PENCILS
     if (ilmn) then
